@@ -10,19 +10,26 @@ import javax.swing.JLabel;
 import javax.swing.border.LineBorder;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.security.acl.LastOwnerException;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
 import java.awt.ComponentOrientation;
 import java.awt.Font;
+import javax.swing.JList;
 
 public class Calculator extends JFrame {
 
+	/* TODO
+	- key handling
+	- formatting result
+	*/
 	private JPanel contentPane;
     StringBuilder firstArg = new StringBuilder();
     boolean firstArgIsDone = false;
     StringBuilder secondArg = new StringBuilder();
     String operation = "";
-    Integer result = 0;
+    Double result = 0.0;
     JLabel jLabelDisplay = null;
 	
 	
@@ -57,7 +64,26 @@ public class Calculator extends JFrame {
 		
 		
 	};
+	public void chainOperations(String operation)
+	{
+		if(operation == "add")
+		    result = Double.parseDouble(firstArg.toString()) + Double.parseDouble(secondArg.toString());
+		if(operation == "substract")
+			result = Double.parseDouble(firstArg.toString()) - Double.parseDouble(secondArg.toString());
+		if(operation == "multiply")
+			result = Double.parseDouble(firstArg.toString()) * Double.parseDouble(secondArg.toString());
+		if(operation == "divide")
+			result = Double.parseDouble(firstArg.toString()) / Double.parseDouble(secondArg.toString());
+	    String tmp = result.toString();
+		jLabelDisplay.setText(result.toString());
+		firstArg.setLength(0);
+		firstArg.append(result.toString());
+		secondArg.setLength(0);
+	}
 
+
+		
+	
 	/**
 	 * Create the frame.
 	 */
@@ -72,16 +98,17 @@ public class Calculator extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btnNewButton = new JButton("1");
-		btnNewButton.addActionListener(new ActionListener() {
+	
+		JButton btn1 = new JButton("1");
+		btn1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				StringBuilder tmp = new StringBuilder();
 				tmp.append(1);
 				clickbutton(tmp);
 			}
 		});
-		btnNewButton.setBounds(20, 125, 89, 23);
-		contentPane.add(btnNewButton);
+		btn1.setBounds(20, 125, 89, 23);
+		contentPane.add(btn1);
 		
 		JButton btnNewButton_1 = new JButton("4");
 		btnNewButton_1.addActionListener(new ActionListener() {
@@ -185,21 +212,12 @@ public class Calculator extends JFrame {
 				{
 					 if(result != 0)
 					 {
-						 result = Integer.parseInt(firstArg.toString()) + Integer.parseInt(secondArg.toString());
-						 jLabelDisplay.setText(result.toString());
-						 firstArg.setLength(0);
-						 firstArg.append(result.toString());
-						 secondArg.setLength(0);
+						chainOperations("add");
 					 }
 					 else
 					 {
-					  result = Integer.parseInt(firstArg.toString()) + Integer.parseInt(secondArg.toString());
-				      jLabelDisplay.setText(result.toString());		
-				      firstArg.setLength(0);
-				      firstArg.append(result.toString());
-				      secondArg.setLength(0);
-					 }
-					  
+					    chainOperations("add");
+					 } 					  
 				}
 			}
 		});
@@ -215,6 +233,17 @@ public class Calculator extends JFrame {
 					jLabelDisplay.setText("");
 					firstArgIsDone = true;
 				}
+				if(secondArg.length() > 0)
+				{
+					 if(result != 0)
+					 {
+						chainOperations("substract");
+					 }
+					 else
+					 {
+					    chainOperations("substract");
+					 } 					  
+				}
 			}
 		});
 		btnNewButton_10.setBounds(335, 45, 89, 23);
@@ -228,6 +257,17 @@ public class Calculator extends JFrame {
 				{
 					jLabelDisplay.setText("");
 					firstArgIsDone = true;
+				}
+				if(secondArg.length() > 0)
+				{
+					 if(result != 0)
+					 {
+						chainOperations("multiply");
+					 }
+					 else
+					 {
+					    chainOperations("multiply");
+					 } 					  
 				}
 			}			
 		});
@@ -243,6 +283,17 @@ public class Calculator extends JFrame {
 					jLabelDisplay.setText("");
 					firstArgIsDone = true;
 				}
+				if(secondArg.length() > 0)
+				{
+					 if(result != 0)
+					 {
+						chainOperations("divide");
+					 }
+					 else
+					 {
+					    chainOperations("divide");
+					 } 					  
+				}
 			}
 		});
 		btnNewButton_12.setBounds(335, 113, 89, 23);
@@ -255,18 +306,18 @@ public class Calculator extends JFrame {
 					return;
 				jLabelDisplay.setText("");
 				if(operation == "add")
-				    result = Integer.parseInt(firstArg.toString()) + Integer.parseInt(secondArg.toString());
+				    result = Double.parseDouble(firstArg.toString()) + Double.parseDouble(secondArg.toString());
 				if(operation == "substract")
-					result = Integer.parseInt(firstArg.toString()) - Integer.parseInt(secondArg.toString());
+					result = Double.parseDouble(firstArg.toString()) - Double.parseDouble(secondArg.toString());
 				if(operation == "multiply")
-					result = Integer.parseInt(firstArg.toString()) * Integer.parseInt(secondArg.toString());
+					result = Double.parseDouble(firstArg.toString()) * Double.parseDouble(secondArg.toString());
 				if(operation == "divide")
-					result = Integer.parseInt(firstArg.toString()) / Integer.parseInt(secondArg.toString());
+					result = Double.parseDouble(firstArg.toString()) / Double.parseDouble(secondArg.toString());
 			    String tmp = result.toString();
 			    firstArg.setLength(0);
 			    secondArg.setLength(0);
 			    firstArg.append(tmp);
-				jLabelDisplay.setText(result.toString());
+				jLabelDisplay.setText(result.toString().substring(0,result.toString().indexOf('.')+5));
 				operation = "";
 			}
 		});
@@ -302,5 +353,16 @@ public class Calculator extends JFrame {
 		jLabelDisplay.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
 		jLabelDisplay.setBounds(20, 11, 287, 90);
 		contentPane.add(jLabelDisplay);
+		
+		JButton btnNewButton_16 = new JButton(".");
+		btnNewButton_16.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				StringBuilder tmp = new StringBuilder();
+				tmp.append(".");
+				clickbutton(tmp);
+			}
+		});
+		btnNewButton_16.setBounds(218, 228, 89, 23);
+		contentPane.add(btnNewButton_16);				
 	}
 }
